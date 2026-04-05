@@ -155,6 +155,8 @@ export default function Quiz() {
           <button
             onClick={handleNext}
             disabled={loading}
+            aria-busy={loading}
+            aria-label={loading ? 'Submitting quiz…' : isLast ? 'Finish quiz' : 'Next question'}
             className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold px-10 py-2.5 rounded-xl transition-colors"
           >
             {loading ? 'Submitting…' : isLast ? 'Finish Quiz 🏁' : 'Next →'}
