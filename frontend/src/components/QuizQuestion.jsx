@@ -63,7 +63,7 @@ export default function QuizQuestion({
   const getOptionIcon = (key) => {
     if (!revealed || !correctOption) return null;
     if (key === correctOption) return '✅';
-    if (key === selected && key !== correctOption) return '❌';
+    if (key === selected) return '❌';
     return null;
   };
 

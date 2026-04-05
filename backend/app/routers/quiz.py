@@ -134,11 +134,10 @@ async def submit_quiz(
 
         new_streak = 1  # default: start a fresh streak
         if last_progress and last_progress.last_activity_date:
-            yesterday = today - timedelta(days=1)
             if last_progress.last_activity_date == today:
                 # Already quizzed today – preserve current streak
                 new_streak = last_progress.current_streak
-            elif last_progress.last_activity_date == yesterday:
+            elif last_progress.last_activity_date == today - timedelta(days=1):
                 # Consecutive day – extend streak
                 new_streak = last_progress.current_streak + 1
             # else: gap of >1 day → streak resets to 1
