@@ -2,6 +2,8 @@
  * AuthContext – provides authentication state and helpers to the whole app.
  * The JWT token is persisted in localStorage so users stay logged in on refresh.
  */
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { authApi } from '../api/client';
 
@@ -14,15 +16,17 @@ export function AuthProvider({ children }) {
   // On mount, restore session from localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      authApi
-        .me()
-        .then((res) => setUser(res.data))
-        .catch(() => localStorage.removeItem('token'))
-        .finally(() => setLoading(false));
-    } else {
+    if (!token) {
       setLoading(false);
+      return;
     }
+    let cancelled = false;
+    authApi
+      .me()
+      .then((res) => { if (!cancelled) setUser(res.data); })
+      .catch(() => localStorage.removeItem('token'))
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, []);
 
   const login = useCallback(async (username, password) => {
