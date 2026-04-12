@@ -4,6 +4,7 @@ import random
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import selectinload
 
 from app.core.deps import get_current_user
 from app.database import get_db
@@ -41,7 +42,7 @@ async def start_quiz(
       Frontend sends { category_id?, difficulty?, num_questions }
       → Backend queries DB, shuffles results, returns questions WITHOUT correct_option.
     """
-    query = select(Question).join(Question.category)
+    query = select(Question).options(selectinload(Question.category)).join(Question.category)
 
     if payload.category_id is not None:
         query = query.where(Question.category_id == payload.category_id)

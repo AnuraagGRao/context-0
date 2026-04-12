@@ -8,8 +8,9 @@ WORKDIR /app
 # Install system deps required by asyncpg / bcrypt
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies via uv (uses pyproject.toml / uv.lock when present)
-ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+# Install Python dependencies via uv into /opt/venv (outside the mounted /app volume)
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PROJECT_ENVIRONMENT=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 COPY pyproject.toml uv.lock* ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev 2>/dev/null || uv sync --no-dev

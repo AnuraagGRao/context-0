@@ -35,7 +35,7 @@ export default function Register() {
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <span className="text-5xl">🧠</span>
-          <h1 className="mt-3 text-3xl font-bold text-gray-900">QuizMaster</h1>
+          <h1 className="mt-3 text-3xl font-bold text-gray-900">Context0</h1>
           <p className="text-gray-500 mt-1">Create your free account</p>
         </div>
 
@@ -74,9 +74,9 @@ export default function Register() {
               value={form.password}
               onChange={handleChange}
               required
-              minLength={6}
+              minLength={8}
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="min. 6 characters"
+              placeholder="min. 8 characters"
             />
           </div>
 
