@@ -1,4 +1,4 @@
-# 🧠 QuizMaster – General Knowledge Learning Application
+# 🧠 Context0 – General Knowledge Learning Application
 
 A full-stack quiz application built with **FastAPI**, **PostgreSQL**, **React**, and **TailwindCSS**.
 

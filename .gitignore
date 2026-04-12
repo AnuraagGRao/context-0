@@ -1,5 +1,6 @@
 # Python
 __pycache__/
+*.py[cod]
 *.pyc
 *.pyo
 *.pyd
@@ -7,6 +8,17 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+.eggs/
+.env
+.venv
+venv/
+env/
+
+# Node / Frontend
+node_modules/
+dist/
+.cache/
+*.local
 .venv/
 venv/
 env/
@@ -28,10 +40,14 @@ frontend/dist/
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Docker
+*.log
 # Alembic
 backend/alembic/versions/*.pyc

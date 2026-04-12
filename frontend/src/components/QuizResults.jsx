@@ -37,26 +37,33 @@ export default function QuizResults({ result, onRetry, onDashboard }) {
         {result.results.map((r, i) => (
           <div
             key={r.question_id}
-            className={`flex items-center gap-3 p-3 rounded-xl border ${
+            className={`p-3 rounded-xl border ${
               r.is_correct
                 ? 'border-green-200 bg-green-50'
                 : 'border-red-200 bg-red-50'
             }`}
           >
-            <span className="text-xl">{r.is_correct ? '✅' : '❌'}</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-800">Question {i + 1}</p>
-              <p className="text-xs text-gray-500">
-                Your answer:{' '}
-                <span className={r.is_correct ? 'text-green-700' : 'text-red-600'}>
-                  {r.selected_option}
-                </span>
-                {!r.is_correct && (
-                  <span className="text-green-700 ml-2">
-                    · Correct: {r.correct_option}
+            <div className="flex items-start gap-3">
+              <span className="text-xl mt-0.5">{r.is_correct ? '✅' : '❌'}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-800">Question {i + 1}</p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Your answer:{' '}
+                  <span className={r.is_correct ? 'text-green-700' : 'text-red-600'}>
+                    {r.selected_option}
                   </span>
+                  {!r.is_correct && (
+                    <span className="text-green-700 ml-2">
+                      · Correct: {r.correct_option}
+                    </span>
+                  )}
+                </p>
+                {r.explanation && (
+                  <p className="text-xs text-gray-600 mt-1 italic border-t border-gray-200 pt-1">
+                    💡 {r.explanation}
+                  </p>
                 )}
-              </p>
+              </div>
             </div>
           </div>
         ))}
