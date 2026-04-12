@@ -9,4 +9,15 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 3000,
   },
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'react',
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.js'],
+    css: false,
+    clearMocks: true,
+  },
 })

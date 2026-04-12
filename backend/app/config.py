@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24  # 24 hours
 
     # App
-    app_name: str = "General Knowledge Quiz API"
+    app_name: str = "Context0 API"
     debug: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
