@@ -122,6 +122,28 @@ async def submit_quiz(
     # Persist progress record
     if category_id is not None:
         today = date.today()
+
+        # Compute streak: fetch the most recent progress entry for this user
+        latest_result = await db.execute(
+            select(UserProgress)
+            .where(UserProgress.user_id == current_user.id)
+            .order_by(UserProgress.quiz_date.desc())
+            .limit(1)
+        )
+        latest = latest_result.scalars().first()
+
+        if latest is None or latest.last_activity_date is None:
+            new_streak = 1
+        elif latest.last_activity_date == today:
+            # Already played today – carry streak forward
+            new_streak = latest.current_streak
+        elif (today - latest.last_activity_date).days == 1:
+            # Played yesterday – extend streak
+            new_streak = latest.current_streak + 1
+        else:
+            # Gap of more than one day – reset streak
+            new_streak = 1
+
         progress = UserProgress(
             user_id=current_user.id,
             category_id=category_id,
@@ -129,6 +151,7 @@ async def submit_quiz(
             total_questions=total,
             accuracy=accuracy,
             quiz_date=datetime.now(timezone.utc),
+            current_streak=new_streak,
             last_activity_date=today,
         )
         db.add(progress)

@@ -1,13 +1,22 @@
 """Pydantic schemas for User / Auth endpoints."""
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 class UserCreate(BaseModel):
-    username: str
+    username: str = Field(min_length=3, max_length=50)
     email: EmailStr
-    password: str
+    password: str = Field(min_length=8, max_length=128)
+
+    @field_validator("password")
+    @classmethod
+    def password_complexity(cls, v: str) -> str:
+        if not any(c.isdigit() for c in v):
+            raise ValueError("Password must contain at least one digit.")
+        if not any(c.isalpha() for c in v):
+            raise ValueError("Password must contain at least one letter.")
+        return v
 
 
 class UserOut(BaseModel):
@@ -23,7 +32,3 @@ class UserOut(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
-
-
-class TokenData(BaseModel):
-    user_id: int | None = None

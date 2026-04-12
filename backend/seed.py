@@ -3,9 +3,9 @@ import asyncio
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-DATABASE_URL = "postgresql+asyncpg://quiz_user:quiz_pass@db:5432/quiz_db"
+from app.config import settings
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(settings.database_url)
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 CATEGORIES = [

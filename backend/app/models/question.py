@@ -10,12 +10,6 @@ if TYPE_CHECKING:
     from app.models.category import Category
 
 
-class DifficultyLevel(str):
-    EASY = "easy"
-    MEDIUM = "medium"
-    HARD = "hard"
-
-
 class Question(Base):
     __tablename__ = "questions"
 
