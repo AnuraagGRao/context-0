@@ -1,7 +1,7 @@
-"""JWT creation and password hashing utilities."""
+"""JWT creation / verification and password hashing helpers."""
 from datetime import datetime, timedelta, timezone
 
-from jose import jwt
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from app.config import settings
@@ -9,23 +9,27 @@ from app.config import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def hash_password(password: str) -> str:
-    """Return a bcrypt hash of the given plain-text password."""
-    return pwd_context.hash(password)
+def hash_password(plain: str) -> str:
+    return pwd_context.hash(plain)
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    """Return True if *plain* matches the *hashed* password."""
     return pwd_context.verify(plain, hashed)
 
 
-def create_access_token(data: dict) -> str:
-    """
-    Encode *data* into a signed JWT that expires after the configured interval.
-    """
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    """Create a signed JWT containing *data* plus an expiry claim."""
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.access_token_expire_minutes
+    expire = datetime.now(timezone.utc) + (
+        expires_delta or timedelta(minutes=settings.access_token_expire_minutes)
     )
-    to_encode["exp"] = expire
+    to_encode.update({"exp": expire})
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
+
+
+def decode_access_token(token: str) -> dict | None:
+    """Decode and verify a JWT. Returns the payload dict or None on failure."""
+    try:
+        return jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+    except JWTError:
+        return None

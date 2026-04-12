@@ -2,11 +2,11 @@
  * QuizQuestion – renders a single multiple-choice question.
  *
  * Props:
- *   question       – Question object from the API
- *   selected       – currently selected option key ('A'|'B'|'C'|'D'|null)
- *   onSelect       – callback(optionKey) called when user picks an answer
- *   revealed       – boolean; when true locks the answer and shows the Next button
- *   correctOption  – the correct answer key, only available AFTER quiz submission (null during quiz)
+ *   question     – Question object from the API
+ *   selected     – currently selected option key ('A'|'B'|'C'|'D'|null)
+ *   onSelect     – callback(optionKey) called when user picks an answer
+ *   revealed     – boolean; when true shows correct/incorrect colouring
+ *   correctOption – the correct answer key (only used when revealed=true)
  *   questionNumber – 1-based index for display
  *   totalQuestions – total number of questions in this quiz
  */
@@ -28,10 +28,8 @@ export default function QuizQuestion({
 
   /**
    * Compute the visual style for each answer button.
-   *
    * Before reveal: selected = indigo highlight, others = default.
-   * After reveal with correctOption known: correct = green, wrong selection = red, rest = muted.
-   * After reveal without correctOption (during active quiz): selected = indigo locked, rest = muted.
+   * After reveal: correct = green, wrong selection = red, rest = default.
    */
   const getOptionStyle = (key) => {
     const base =
@@ -43,27 +41,20 @@ export default function QuizQuestion({
         : `${base} border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 cursor-pointer`;
     }
 
-    // Post-reveal: show correct/wrong only when the correct answer is known
-    if (correctOption) {
-      if (key === correctOption) {
-        return `${base} border-green-500 bg-green-50 text-green-800`;
-      }
-      if (key === selected && key !== correctOption) {
-        return `${base} border-red-400 bg-red-50 text-red-800`;
-      }
-      return `${base} border-gray-200 text-gray-500`;
+    // Post-reveal colouring
+    if (key === correctOption) {
+      return `${base} border-green-500 bg-green-50 text-green-800`;
     }
-
-    // Revealed but correct answer not yet known (mid-quiz): lock selection as indigo
-    return key === selected
-      ? `${base} border-indigo-500 bg-indigo-50 text-indigo-800`
-      : `${base} border-gray-200 text-gray-500`;
+    if (key === selected && key !== correctOption) {
+      return `${base} border-red-400 bg-red-50 text-red-800`;
+    }
+    return `${base} border-gray-200 text-gray-500`;
   };
 
   const getOptionIcon = (key) => {
-    if (!revealed || !correctOption) return null;
+    if (!revealed) return null;
     if (key === correctOption) return '✅';
-    if (key === selected) return '❌';
+    if (key === selected && key !== correctOption) return '❌';
     return null;
   };
 
@@ -123,7 +114,7 @@ export default function QuizQuestion({
         ))}
       </div>
 
-      {/* Explanation (shown after reveal when available) */}
+      {/* Explanation (shown after reveal) */}
       {revealed && question.explanation && (
         <div className="mt-5 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
           <p className="text-sm text-blue-800">

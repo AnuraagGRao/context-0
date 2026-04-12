@@ -32,12 +32,10 @@ app = FastAPI(
 )
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
-# Parse comma-separated origins from config / environment variable.
-_cors_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
-
+# Allow the React dev server (port 3000) to communicate with the API.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=_cors_origins,
+    allow_origins=["http://localhost:3000", "http://frontend:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

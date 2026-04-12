@@ -1,5 +1,7 @@
-"""ORM model imports – ensures all models are registered with SQLAlchemy metadata."""
-from app.models.user import User  # noqa: F401
-from app.models.category import Category  # noqa: F401
-from app.models.question import Question  # noqa: F401
-from app.models.progress import UserProgress  # noqa: F401
+"""Re-export all models so Alembic autogenerate can discover them."""
+from app.models.user import User
+from app.models.category import Category
+from app.models.question import Question
+from app.models.progress import UserProgress
+
+__all__ = ["User", "Category", "Question", "UserProgress"]

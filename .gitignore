@@ -1,6 +1,7 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyc
 *.pyo
 *.pyd
 .Python
@@ -18,6 +19,23 @@ node_modules/
 dist/
 .cache/
 *.local
+.venv/
+venv/
+env/
+.env
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React build artifacts
+frontend/build/
+frontend/dist/
+
+# Docker
+*.log
 
 # IDE
 .vscode/
@@ -31,3 +49,5 @@ Thumbs.db
 
 # Docker
 *.log
+# Alembic
+backend/alembic/versions/*.pyc

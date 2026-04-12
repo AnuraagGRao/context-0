@@ -1,5 +1,5 @@
 """Pydantic schemas for Quiz endpoints."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class CategoryOut(BaseModel):
@@ -29,7 +29,7 @@ class QuizRequest(BaseModel):
     """Parameters for requesting a new quiz."""
     category_id: int | None = None      # None → mixed categories
     difficulty: str | None = None       # None → mixed difficulties
-    num_questions: int = Field(default=10, ge=1, le=20)  # 1–20 questions
+    num_questions: int = 10             # default quiz length
 
 
 class AnswerItem(BaseModel):

@@ -1,6 +1,5 @@
 """Quiz router – fetch randomised questions and submit answers."""
 import random
-from datetime import date, datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,11 +8,9 @@ from sqlalchemy.future import select
 from app.core.deps import get_current_user
 from app.database import get_db
 from app.models.category import Category
-from app.models.progress import UserProgress
 from app.models.question import Question
 from app.models.user import User
 from app.schemas.quiz import (
-    AnswerResult,
     CategoryOut,
     QuestionOut,
     QuizRequest,
@@ -79,6 +76,10 @@ async def submit_quiz(
       → Backend loads each question, compares answers, calculates score,
         saves UserProgress record, returns detailed per-question feedback.
     """
+    from app.models.progress import UserProgress
+    from app.schemas.quiz import AnswerResult
+    from datetime import date, datetime, timezone
+
     if not payload.answers:
         raise HTTPException(status_code=400, detail="No answers provided.")
 
@@ -118,30 +119,9 @@ async def submit_quiz(
         first_q = questions_map.get(answer_results[0].question_id)
         category_id = first_q.category_id if first_q else None
 
-    # Persist progress record with streak calculation
+    # Persist progress record
     if category_id is not None:
         today = date.today()
-
-        # ── Streak calculation ──────────────────────────────────────────────────
-        # Look up the user's most recent progress entry to determine streak.
-        recent_result = await db.execute(
-            select(UserProgress)
-            .where(UserProgress.user_id == current_user.id)
-            .order_by(UserProgress.quiz_date.desc())
-            .limit(1)
-        )
-        last_progress = recent_result.scalar_one_or_none()
-
-        new_streak = 1  # default: start a fresh streak
-        if last_progress and last_progress.last_activity_date:
-            if last_progress.last_activity_date == today:
-                # Already quizzed today – preserve current streak
-                new_streak = last_progress.current_streak
-            elif last_progress.last_activity_date == today - timedelta(days=1):
-                # Consecutive day – extend streak
-                new_streak = last_progress.current_streak + 1
-            # else: gap of >1 day → streak resets to 1
-
         progress = UserProgress(
             user_id=current_user.id,
             category_id=category_id,
@@ -149,7 +129,6 @@ async def submit_quiz(
             total_questions=total,
             accuracy=accuracy,
             quiz_date=datetime.now(timezone.utc),
-            current_streak=new_streak,
             last_activity_date=today,
         )
         db.add(progress)

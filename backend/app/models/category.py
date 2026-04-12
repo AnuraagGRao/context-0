@@ -14,12 +14,11 @@ class Category(Base):
     __tablename__ = "categories"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False, index=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    icon: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    icon: Mapped[str | None] = mapped_column(String(50), nullable=True)  # emoji or icon class
 
+    # Relationships
     questions: Mapped[List["Question"]] = relationship(
-        "Question",
-        back_populates="category",
-        cascade="all, delete-orphan",
+        "Question", back_populates="category", cascade="all, delete-orphan"
     )

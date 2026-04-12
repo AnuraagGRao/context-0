@@ -15,9 +15,6 @@ class Settings(BaseSettings):
     app_name: str = "General Knowledge Quiz API"
     debug: bool = False
 
-    # CORS – comma-separated list of allowed origins
-    cors_origins: str = "http://localhost:3000,http://frontend:3000"
-
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

@@ -1,12 +1,18 @@
-version: "3.9"
+# docker-compose.yml
+# Orchestrates three services for local development:
+#   db       – PostgreSQL 16
+#   backend  – FastAPI (hot-reload via uvicorn --reload)
+#   frontend – Vite dev server with HMR
 
 services:
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
+      POSTGRES_DB: quiz_db
       POSTGRES_USER: quiz_user
       POSTGRES_PASSWORD: quiz_pass
-      POSTGRES_DB: quiz_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -15,32 +21,42 @@ services:
       test: ["CMD-SHELL", "pg_isready -U quiz_user -d quiz_db"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
+  # ── FastAPI Backend ─────────────────────────────────────────────────────────
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgresql+asyncpg://quiz_user:quiz_pass@db:5432/quiz_db
-      SECRET_KEY: dev-secret-key-change-in-production
+      SECRET_KEY: dev_secret_key_change_in_production
       DEBUG: "true"
-      CORS_ORIGINS: "http://localhost:3000,http://frontend:3000"
     volumes:
-      - ./backend:/app
+      - ./backend:/app   # mount source for hot-reload
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
+    # After migrations run, seed sample data
+    command: >
+      sh -c "alembic upgrade head &&
+             python seed.py &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
 
+  # ── React Frontend (dev server) ─────────────────────────────────────────────
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
+    restart: unless-stopped
     environment:
       VITE_API_URL: http://localhost:8000
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      - /app/node_modules   # prevent host node_modules overwriting container's
     ports:
       - "3000:3000"
     depends_on:

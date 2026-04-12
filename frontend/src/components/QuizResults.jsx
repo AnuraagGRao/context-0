@@ -57,9 +57,6 @@ export default function QuizResults({ result, onRetry, onDashboard }) {
                   </span>
                 )}
               </p>
-              {r.explanation && (
-                <p className="text-xs text-gray-400 mt-1 italic">{r.explanation}</p>
-              )}
             </div>
           </div>
         ))}

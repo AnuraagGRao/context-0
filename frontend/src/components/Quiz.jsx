@@ -79,7 +79,7 @@ export default function Quiz() {
   const handleSelect = (optionKey) => {
     const qId = questions[currentIndex].id;
     setAnswers((prev) => ({ ...prev, [qId]: optionKey }));
-    setRevealed(true); // lock the selection and show the Next button
+    setRevealed(true); // immediately show feedback
   };
 
   // ── Advance to next question or finish ─────────────────────────────────────
@@ -146,7 +146,7 @@ export default function Quiz() {
           selected={selectedForCurrent}
           onSelect={handleSelect}
           revealed={revealed}
-          correctOption={null}
+          correctOption={q.correct_option}
           questionNumber={currentIndex + 1}
           totalQuestions={questions.length}
         />
@@ -155,8 +155,6 @@ export default function Quiz() {
           <button
             onClick={handleNext}
             disabled={loading}
-            aria-busy={loading}
-            aria-label={loading ? 'Submitting quiz…' : isLast ? 'Finish quiz' : 'Next question'}
             className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold px-10 py-2.5 rounded-xl transition-colors"
           >
             {loading ? 'Submitting…' : isLast ? 'Finish Quiz 🏁' : 'Next →'}

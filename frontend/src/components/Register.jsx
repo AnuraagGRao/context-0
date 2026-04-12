@@ -48,9 +48,8 @@ export default function Register() {
               value={form.username}
               onChange={handleChange}
               required
-              minLength={3}
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="min. 3 characters"
+              placeholder="choose_a_username"
             />
           </div>
 
@@ -75,9 +74,9 @@ export default function Register() {
               value={form.password}
               onChange={handleChange}
               required
-              minLength={8}
+              minLength={6}
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="min. 8 characters"
+              placeholder="min. 6 characters"
             />
           </div>
 
