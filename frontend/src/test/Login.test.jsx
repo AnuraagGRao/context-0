@@ -66,6 +66,6 @@ describe('Login', () => {
 
   it('links to the register page', () => {
     renderLogin()
-    expect(screen.getByRole('link', { name: /register/i })).toHaveAttribute('href', '/register')
+    expect(screen.getByRole('link', { name: /create one/i })).toHaveAttribute('href', '/register')
   })
 })

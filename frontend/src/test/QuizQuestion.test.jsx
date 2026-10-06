@@ -45,7 +45,7 @@ describe('QuizQuestion', () => {
 
   it('shows question progress counter', () => {
     renderQuestion()
-    expect(screen.getByText('Question 1 / 5')).toBeInTheDocument()
+    expect(screen.getByText('1 / 5')).toBeInTheDocument()
   })
 
   it('calls onSelect with the chosen option key', async () => {

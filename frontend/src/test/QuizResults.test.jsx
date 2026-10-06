@@ -45,12 +45,12 @@ describe('QuizResults', () => {
 
   it('shows Excellent grade label for >= 80%', () => {
     render(<QuizResults result={perfectResult} onRetry={vi.fn()} onDashboard={vi.fn()} />)
-    expect(screen.getByText('Excellent!')).toBeInTheDocument()
+    expect(screen.getByText('Excellent')).toBeInTheDocument()
   })
 
   it('shows Keep Practising label for < 60%', () => {
     render(<QuizResults result={poorResult} onRetry={vi.fn()} onDashboard={vi.fn()} />)
-    expect(screen.getByText('Keep Practising!')).toBeInTheDocument()
+    expect(screen.getByText('Keep Practising')).toBeInTheDocument()
   })
 
   it('calls onRetry when New Quiz button is clicked', async () => {

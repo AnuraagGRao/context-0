@@ -98,7 +98,7 @@ describe('Quiz', () => {
     await waitFor(() =>
       expect(screen.getByText('What is 2 + 2?')).toBeInTheDocument()
     )
-    expect(screen.getByText('Question 1 / 2')).toBeInTheDocument()
+    expect(screen.getByText('1 / 2')).toBeInTheDocument()
   })
 
   it('advances to the next question after answering and clicking Next', async () => {
@@ -144,6 +144,6 @@ describe('Quiz', () => {
     )
     await user.click(screen.getByRole('button', { name: /finish quiz/i }))
 
-    await waitFor(() => expect(screen.getByText('Excellent!')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('Excellent')).toBeInTheDocument())
   })
 })

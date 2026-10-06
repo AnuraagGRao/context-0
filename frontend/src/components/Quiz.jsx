@@ -118,7 +118,7 @@ export default function Quiz() {
   // ── Render ─────────────────────────────────────────────────────────────────
   if (phase === 'results') {
     return (
-      <div className="flex flex-col items-center px-4 py-10">
+      <div className="flex flex-col items-center px-4 py-10" style={{ minHeight: 'calc(100vh - 48px)' }}>
         <QuizResults
           result={result}
           onRetry={handleRetry}
@@ -134,9 +134,16 @@ export default function Quiz() {
     const isLast = currentIndex === questions.length - 1;
 
     return (
-      <div className="flex flex-col items-center px-4 py-10 gap-4">
+      <div className="flex flex-col items-center px-4 py-10 gap-4" style={{ minHeight: 'calc(100vh - 48px)' }}>
         {error && (
-          <p className="text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-sm">
+          <p
+            className="text-xs rounded-md px-3 py-2 w-full max-w-2xl"
+            style={{
+              background: 'var(--danger-dim)',
+              color: 'var(--danger)',
+              border: '1px solid rgba(229,72,77,0.25)',
+            }}
+          >
             {error}
           </p>
         )}
@@ -155,9 +162,12 @@ export default function Quiz() {
           <button
             onClick={handleNext}
             disabled={loading}
-            className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold px-10 py-2.5 rounded-xl transition-colors"
+            className="px-8 py-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50"
+            style={{ background: 'var(--accent)', color: '#fff' }}
+            onMouseEnter={e => { if (!loading) e.target.style.background = 'var(--accent-hover)'; }}
+            onMouseLeave={e => { e.target.style.background = 'var(--accent)'; }}
           >
-            {loading ? 'Submitting…' : isLast ? 'Finish Quiz 🏁' : 'Next →'}
+            {loading ? 'Submitting…' : isLast ? 'Finish Quiz' : 'Next →'}
           </button>
         )}
       </div>
@@ -166,15 +176,36 @@ export default function Quiz() {
 
   // Setup screen
   return (
-    <div className="flex flex-col items-center px-4 py-16">
-      <div className="bg-white rounded-2xl shadow-md p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-gray-900 mb-1 text-center">Start a Quiz</h2>
-        <p className="text-gray-500 text-sm text-center mb-6">
+    <div
+      className="flex flex-col items-center justify-center px-4 py-16"
+      style={{ minHeight: 'calc(100vh - 48px)' }}
+    >
+      <div
+        className="rounded-xl p-8 w-full max-w-md"
+        style={{
+          background: 'var(--bg-panel)',
+          border: '1px solid var(--border-strong)',
+        }}
+      >
+        <h2
+          className="text-lg font-semibold tracking-tight mb-1"
+          style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}
+        >
+          Start a Quiz
+        </h2>
+        <p className="text-sm mb-6" style={{ color: 'var(--text-muted)' }}>
           Choose your category, difficulty and length
         </p>
 
         {error && (
-          <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2 mb-4">
+          <p
+            className="text-xs rounded-md px-3 py-2 mb-4"
+            style={{
+              background: 'var(--danger-dim)',
+              color: 'var(--danger)',
+              border: '1px solid rgba(229,72,77,0.25)',
+            }}
+          >
             {error}
           </p>
         )}
@@ -182,13 +213,20 @@ export default function Quiz() {
         <div className="space-y-4">
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              Category
+            </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-md px-3 py-2 text-sm outline-none transition-all"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border-strong)',
+                color: 'var(--text-primary)',
+              }}
             >
-              <option value="">🌐 All Categories</option>
+              <option value="">All Categories</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.icon} {c.name}
@@ -199,11 +237,18 @@ export default function Quiz() {
 
           {/* Difficulty */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              Difficulty
+            </label>
             <select
               value={selectedDifficulty}
               onChange={(e) => setSelectedDifficulty(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-md px-3 py-2 text-sm outline-none transition-all"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border-strong)',
+                color: 'var(--text-primary)',
+              }}
             >
               {DIFFICULTIES.map((d) => (
                 <option key={d.value} value={d.value}>
@@ -215,8 +260,8 @@ export default function Quiz() {
 
           {/* Number of questions */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Number of Questions
+            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              Questions
             </label>
             <input
               type="number"
@@ -224,16 +269,24 @@ export default function Quiz() {
               max={20}
               value={numQuestions}
               onChange={(e) => setNumQuestions(Number(e.target.value))}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-md px-3 py-2 text-sm outline-none transition-all"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border-strong)',
+                color: 'var(--text-primary)',
+              }}
             />
           </div>
 
           <button
             onClick={handleStart}
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-colors mt-2"
+            className="w-full py-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50 mt-2"
+            style={{ background: 'var(--accent)', color: '#fff' }}
+            onMouseEnter={e => { if (!loading) e.target.style.background = 'var(--accent-hover)'; }}
+            onMouseLeave={e => { e.target.style.background = 'var(--accent)'; }}
           >
-            {loading ? 'Loading…' : '🚀 Start Quiz'}
+            {loading ? 'Loading…' : 'Start Quiz →'}
           </button>
         </div>
       </div>

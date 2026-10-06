@@ -60,7 +60,7 @@ describe('Dashboard', () => {
   it('shows a loading indicator while fetching stats', () => {
     vi.mocked(progressApi.getStats).mockReturnValue(new Promise(() => {}))
     renderDashboard()
-    expect(screen.getByText(/loading your stats/i)).toBeInTheDocument()
+    expect(screen.getByText(/loading…/i)).toBeInTheDocument()
   })
 
   it('shows the welcome message with the username', async () => {
@@ -93,7 +93,7 @@ describe('Dashboard', () => {
     vi.mocked(progressApi.getStats).mockResolvedValue({ data: emptyStats })
     renderDashboard()
     await waitFor(() =>
-      expect(screen.getByText(/no quiz activity yet/i)).toBeInTheDocument()
+      expect(screen.getByText(/no activity yet/i)).toBeInTheDocument()
     )
   })
 

@@ -27,87 +27,144 @@ export default function QuizQuestion({
   ];
 
   /**
-   * Compute the visual style for each answer button.
-   * Before reveal: selected = indigo highlight, others = default.
-   * After reveal: correct = green, wrong selection = red, rest = default.
+   * Returns inline style object for each answer button.
    */
   const getOptionStyle = (key) => {
-    const base =
-      'w-full text-left px-5 py-3.5 rounded-xl border-2 transition-all duration-200 font-medium';
+    const base = {
+      display: 'block',
+      width: '100%',
+      textAlign: 'left',
+      padding: '10px 14px',
+      borderRadius: '6px',
+      border: '1px solid',
+      transition: 'all 0.15s',
+      fontSize: '0.875rem',
+      cursor: revealed ? 'default' : 'pointer',
+    };
 
     if (!revealed) {
-      return key === selected
-        ? `${base} border-indigo-500 bg-indigo-50 text-indigo-800`
-        : `${base} border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 cursor-pointer`;
+      if (key === selected) {
+        return {
+          ...base,
+          borderColor: 'var(--accent)',
+          background: 'var(--accent-dim)',
+          color: 'var(--text-primary)',
+          boxShadow: '0 0 0 2px var(--accent-dim)',
+        };
+      }
+      return {
+        ...base,
+        borderColor: 'var(--border)',
+        background: 'var(--bg-elevated)',
+        color: 'var(--text-body)',
+      };
     }
 
-    // Post-reveal colouring
     if (key === correctOption) {
-      return `${base} border-green-500 bg-green-50 text-green-800`;
+      return {
+        ...base,
+        borderColor: 'rgba(39,166,68,0.4)',
+        background: 'var(--success-dim)',
+        color: 'var(--success)',
+      };
     }
     if (key === selected && key !== correctOption) {
-      return `${base} border-red-400 bg-red-50 text-red-800`;
+      return {
+        ...base,
+        borderColor: 'rgba(229,72,77,0.4)',
+        background: 'var(--danger-dim)',
+        color: 'var(--danger)',
+      };
     }
-    return `${base} border-gray-200 text-gray-500`;
+    return {
+      ...base,
+      borderColor: 'var(--border)',
+      background: 'transparent',
+      color: 'var(--text-faint)',
+    };
   };
 
-  const getOptionIcon = (key) => {
-    if (!revealed) return null;
-    if (key === correctOption) return '✅';
-    if (key === selected && key !== correctOption) return '❌';
-    return null;
-  };
-
-  const difficultyColor = {
-    easy: 'bg-green-100 text-green-700',
-    medium: 'bg-yellow-100 text-yellow-700',
-    hard: 'bg-red-100 text-red-700',
-  }[question.difficulty] || 'bg-gray-100 text-gray-600';
+  const difficultyStyle = {
+    easy:   { background: 'var(--success-dim)', color: 'var(--success)' },
+    medium: { background: 'var(--warning-dim)', color: 'var(--warning)' },
+    hard:   { background: 'var(--danger-dim)',  color: 'var(--danger)'  },
+  }[question.difficulty] || { background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 max-w-2xl w-full">
+    <div
+      className="rounded-xl p-6 max-w-2xl w-full"
+      style={{
+        background: 'var(--bg-panel)',
+        border: '1px solid var(--border-strong)',
+      }}
+    >
       {/* Progress & metadata bar */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-medium text-gray-500">
-          Question {questionNumber} / {totalQuestions}
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs" style={{ color: 'var(--text-faint)' }}>
+          {questionNumber} / {totalQuestions}
         </span>
-        <div className="flex items-center gap-2">
-          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+        <div className="flex items-center gap-1.5">
+          <span
+            className="text-xs px-2 py-0.5 rounded-full font-medium"
+            style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}
+          >
             {question.category.name}
           </span>
-          <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${difficultyColor}`}>
+          <span
+            className="text-xs px-2 py-0.5 rounded-full font-medium capitalize"
+            style={difficultyStyle}
+          >
             {question.difficulty}
           </span>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-gray-100 rounded-full h-1.5 mb-6">
+      <div
+        className="w-full rounded-full h-0.5 mb-6"
+        style={{ background: 'var(--border)' }}
+      >
         <div
-          className="bg-indigo-500 h-1.5 rounded-full transition-all"
-          style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
+          className="h-0.5 rounded-full transition-all"
+          style={{
+            width: `${(questionNumber / totalQuestions) * 100}%`,
+            background: 'var(--accent)',
+          }}
         />
       </div>
 
       {/* Question text */}
-      <p className="text-lg font-semibold text-gray-900 mb-6 leading-snug">{question.text}</p>
+      <p
+        className="text-base font-medium mb-5 leading-relaxed"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {question.text}
+      </p>
 
       {/* Answer options */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {options.map(({ key, text }) => (
           <button
             key={key}
             onClick={() => !revealed && onSelect(key)}
             disabled={revealed}
-            className={getOptionStyle(key)}
+            style={getOptionStyle(key)}
           >
-            <span className="flex items-center justify-between">
+            <span className="flex items-center justify-between gap-3">
               <span>
-                <span className="font-bold mr-3 text-indigo-600">{key}.</span>
+                <span
+                  className="inline-block w-5 text-xs font-bold mr-2"
+                  style={{ color: revealed ? 'inherit' : 'var(--accent)' }}
+                >
+                  {key}
+                </span>
                 {text}
               </span>
-              {getOptionIcon(key) && (
-                <span className="ml-2">{getOptionIcon(key)}</span>
+              {revealed && key === correctOption && (
+                <span className="text-sm flex-shrink-0">✓</span>
+              )}
+              {revealed && key === selected && key !== correctOption && (
+                <span className="text-sm flex-shrink-0">✗</span>
               )}
             </span>
           </button>
@@ -116,9 +173,15 @@ export default function QuizQuestion({
 
       {/* Explanation (shown after reveal) */}
       {revealed && question.explanation && (
-        <div className="mt-5 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
-          <p className="text-sm text-blue-800">
-            <span className="font-semibold">💡 Explanation: </span>
+        <div
+          className="mt-4 rounded-lg px-4 py-3"
+          style={{
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border)',
+          }}
+        >
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            <span className="font-semibold" style={{ color: 'var(--text-body)' }}>Explanation: </span>
             {question.explanation}
           </p>
         </div>

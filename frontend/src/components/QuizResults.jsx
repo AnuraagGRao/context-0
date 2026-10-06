@@ -10,57 +10,79 @@ export default function QuizResults({ result, onRetry, onDashboard }) {
   const pct = Math.round(result.accuracy * 100);
 
   const gradeInfo = () => {
-    if (pct >= 80) return { emoji: '🏆', label: 'Excellent!', color: 'text-green-600' };
-    if (pct >= 60) return { emoji: '👍', label: 'Good Job!', color: 'text-yellow-600' };
-    return { emoji: '📚', label: 'Keep Practising!', color: 'text-red-500' };
+    if (pct >= 80) return { label: 'Excellent', style: { color: 'var(--success)' } };
+    if (pct >= 60) return { label: 'Good Job', style: { color: 'var(--warning)' } };
+    return { label: 'Keep Practising', style: { color: 'var(--danger)' } };
   };
 
-  const { emoji, label, color } = gradeInfo();
+  const { label, style } = gradeInfo();
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-8 max-w-2xl w-full">
+    <div
+      className="rounded-xl p-6 max-w-2xl w-full"
+      style={{
+        background: 'var(--bg-panel)',
+        border: '1px solid var(--border-strong)',
+      }}
+    >
       {/* Score header */}
-      <div className="text-center mb-8">
-        <span className="text-6xl">{emoji}</span>
-        <h2 className={`text-3xl font-bold mt-3 ${color}`}>{label}</h2>
-        <p className="text-gray-500 mt-1">
-          You scored{' '}
-          <strong className="text-gray-900">
-            {result.score} / {result.total_questions}
-          </strong>{' '}
-          ({pct}%)
+      <div className="mb-6 pb-5" style={{ borderBottom: '1px solid var(--border)' }}>
+        <p className="text-xs font-medium mb-1" style={{ color: 'var(--text-faint)' }}>
+          Results
+        </p>
+        <h2
+          className="text-2xl font-semibold tracking-tight"
+          style={{ ...style, letterSpacing: '-0.02em' }}
+        >
+          {label}
+        </h2>
+        <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+          {result.score} / {result.total_questions} correct &middot; {pct}% accuracy
         </p>
       </div>
 
       {/* Per-question breakdown */}
-      <div className="space-y-3 mb-8">
+      <div className="space-y-2 mb-6">
         {result.results.map((r, i) => (
           <div
             key={r.question_id}
-            className={`p-3 rounded-xl border ${
-              r.is_correct
-                ? 'border-green-200 bg-green-50'
-                : 'border-red-200 bg-red-50'
-            }`}
+            className="rounded-lg p-3"
+            style={{
+              background: 'var(--bg-elevated)',
+              border: `1px solid ${r.is_correct ? 'rgba(39,166,68,0.2)' : 'rgba(229,72,77,0.2)'}`,
+            }}
           >
             <div className="flex items-start gap-3">
-              <span className="text-xl mt-0.5">{r.is_correct ? '✅' : '❌'}</span>
+              <span
+                className="text-xs font-bold mt-0.5"
+                style={{ color: r.is_correct ? 'var(--success)' : 'var(--danger)' }}
+              >
+                {r.is_correct ? '✓' : '✗'}
+              </span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-800">Question {i + 1}</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
+                  Question {i + 1}
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--text-faint)' }}>
                   Your answer:{' '}
-                  <span className={r.is_correct ? 'text-green-700' : 'text-red-600'}>
+                  <span style={{ color: r.is_correct ? 'var(--success)' : 'var(--danger)' }}>
                     {r.selected_option}
                   </span>
                   {!r.is_correct && (
-                    <span className="text-green-700 ml-2">
-                      · Correct: {r.correct_option}
+                    <span style={{ color: 'var(--success)', marginLeft: '8px' }}>
+                      Correct: {r.correct_option}
                     </span>
                   )}
                 </p>
                 {r.explanation && (
-                  <p className="text-xs text-gray-600 mt-1 italic border-t border-gray-200 pt-1">
-                    💡 {r.explanation}
+                  <p
+                    className="text-xs mt-1.5 pt-1.5 italic"
+                    style={{
+                      color: 'var(--text-faint)',
+                      borderTop: '1px solid var(--border)',
+                    }}
+                  >
+                    {r.explanation}
                   </p>
                 )}
               </div>
@@ -70,18 +92,28 @@ export default function QuizResults({ result, onRetry, onDashboard }) {
       </div>
 
       {/* Action buttons */}
-      <div className="flex gap-3">
+      <div className="flex gap-2">
         <button
           onClick={onRetry}
-          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl transition-colors"
+          className="flex-1 py-2 rounded-md text-sm font-semibold transition-all"
+          style={{ background: 'var(--accent)', color: '#fff' }}
+          onMouseEnter={e => { e.target.style.background = 'var(--accent-hover)'; }}
+          onMouseLeave={e => { e.target.style.background = 'var(--accent)'; }}
         >
-          🔁 New Quiz
+          New Quiz
         </button>
         <button
           onClick={onDashboard}
-          className="flex-1 border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 font-semibold py-2.5 rounded-xl transition-colors"
+          className="flex-1 py-2 rounded-md text-sm font-semibold transition-all"
+          style={{
+            background: 'transparent',
+            border: '1px solid var(--border-strong)',
+            color: 'var(--text-body)',
+          }}
+          onMouseEnter={e => { e.target.style.background = 'var(--bg-elevated)'; }}
+          onMouseLeave={e => { e.target.style.background = 'transparent'; }}
         >
-          📊 Dashboard
+          Dashboard
         </button>
       </div>
     </div>

@@ -83,3 +83,19 @@ cd frontend
 npm install
 VITE_API_URL=http://localhost:8000 npm run dev
 ```
+
+---
+
+## 🚀 Cloud Deployment (Render Blueprint)
+
+Context0 includes a native `render.yaml` Blueprint to automatically deploy all 3 tiers (Managed PostgreSQL database, Python FastAPI web service, and React static frontend):
+
+1. Go to your **[Render Dashboard](https://dashboard.render.com)**.
+2. Click **New +** ➔ **Blueprint**.
+3. Select your GitHub repository: `context-0`.
+4. Render will read `render.yaml` and provision:
+   - **`context0-db`**: Free managed PostgreSQL database
+   - **`context0-backend`**: Free FastAPI service running database migrations & seed script
+   - **`context0-frontend`**: Free global static website with React Router SPA rewrite rules
+5. Click **Apply** — Render handles all environment variable wiring automatically!
+

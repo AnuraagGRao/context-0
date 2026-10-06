@@ -31,43 +31,99 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
-      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <div className="text-center mb-8">
-          <span className="text-5xl">🧠</span>
-          <h1 className="mt-3 text-3xl font-bold text-gray-900">Context0</h1>
-          <p className="text-gray-500 mt-1">Sign in to continue</p>
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ background: 'var(--bg-base)' }}
+    >
+      <div
+        className="w-full max-w-sm rounded-xl p-8"
+        style={{
+          background: 'var(--bg-panel)',
+          border: '1px solid var(--border-strong)',
+        }}
+      >
+        {/* Header */}
+        <div className="mb-8">
+          <div
+            className="inline-flex items-center gap-2 mb-6 text-xs font-medium px-2.5 py-1 rounded-full"
+            style={{ background: 'var(--accent-dim)', color: 'var(--accent-hover)' }}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Context0
+          </div>
+          <h1
+            className="text-xl font-semibold tracking-tight"
+            style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}
+          >
+            Welcome back
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+            Sign in to your account
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label
+              className="block text-xs font-medium mb-1.5"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Username
+            </label>
             <input
               type="text"
               name="username"
               value={form.username}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-md px-3 py-2 text-sm outline-none transition-all"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border-strong)',
+                color: 'var(--text-primary)',
+              }}
+              onFocus={e => { e.target.style.borderColor = 'var(--accent)'; e.target.style.boxShadow = '0 0 0 3px var(--accent-dim)'; }}
+              onBlur={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.boxShadow = 'none'; }}
               placeholder="your_username"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label
+              className="block text-xs font-medium mb-1.5"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Password
+            </label>
             <input
               type="password"
               name="password"
               value={form.password}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-md px-3 py-2 text-sm outline-none transition-all"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border-strong)',
+                color: 'var(--text-primary)',
+              }}
+              onFocus={e => { e.target.style.borderColor = 'var(--accent)'; e.target.style.boxShadow = '0 0 0 3px var(--accent-dim)'; }}
+              onBlur={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.boxShadow = 'none'; }}
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2">
+            <p
+              className="text-xs rounded-md px-3 py-2"
+              style={{
+                background: 'var(--danger-dim)',
+                color: 'var(--danger)',
+                border: '1px solid rgba(229,72,77,0.25)',
+              }}
+            >
               {error}
             </p>
           )}
@@ -75,16 +131,22 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg transition-colors"
+            className="w-full py-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50"
+            style={{
+              background: 'var(--accent)',
+              color: '#fff',
+            }}
+            onMouseEnter={e => { if (!loading) e.target.style.background = 'var(--accent-hover)'; }}
+            onMouseLeave={e => { e.target.style.background = 'var(--accent)'; }}
           >
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-xs mt-6" style={{ color: 'var(--text-faint)' }}>
           No account?{' '}
-          <Link to="/register" className="text-indigo-600 hover:underline font-medium">
-            Register
+          <Link to="/register" className="font-medium" style={{ color: 'var(--accent-hover)' }}>
+            Create one
           </Link>
         </p>
       </div>

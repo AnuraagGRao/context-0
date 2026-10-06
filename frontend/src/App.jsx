@@ -13,7 +13,14 @@ import Navbar from './components/Navbar';
 /** Wrapper: redirect to /login when the user is not authenticated. */
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="flex items-center justify-center min-h-screen">Loading…</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen" style={{ background: 'var(--bg-base)', color: 'var(--text-muted)' }}>
+      <div className="flex items-center gap-3 text-sm">
+        <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+        Loading…
+      </div>
+    </div>
+  );
   return user ? children : <Navigate to="/login" replace />;
 }
 
