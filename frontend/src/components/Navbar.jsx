@@ -3,9 +3,11 @@
  */
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { themeIcon, themeName, cycleTheme } = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -58,6 +60,15 @@ export default function Navbar() {
         <div className="flex items-center gap-1">
           {navLink('/dashboard', 'Dashboard')}
           {navLink('/quiz', 'Quiz')}
+          <button
+            onClick={cycleTheme}
+            className="text-xs px-2.5 py-1.5 rounded-md font-medium transition-all hover:bg-white/5 border border-[var(--border)] flex items-center gap-1.5"
+            style={{ color: 'var(--text-primary)' }}
+            title={`Current theme: ${themeName} (Click to switch)`}
+          >
+            <span>{themeIcon}</span>
+            <span className="hidden sm:inline text-xs">{themeName}</span>
+          </button>
           <div className="w-px h-4 mx-1" style={{ background: 'var(--border-strong)' }} />
           <span className="text-xs hidden sm:block px-2" style={{ color: 'var(--text-faint)' }}>
             {user?.username}
