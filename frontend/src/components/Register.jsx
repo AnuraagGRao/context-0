@@ -24,7 +24,12 @@ export default function Register() {
       await register(form.username, form.email, form.password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      const msg =
+        err.response?.data?.detail ||
+        (err.message === 'Network Error' || !err.response
+          ? `Cannot reach backend (${err.config?.baseURL || 'API'}). Check if context0-backend is still booting on Render.`
+          : err.message || 'Registration failed. Please try again.');
+      setError(msg);
     } finally {
       setLoading(false);
     }

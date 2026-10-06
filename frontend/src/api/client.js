@@ -4,7 +4,11 @@
  */
 import axios from 'axios';
 
-let rawBase = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+let rawBase =
+  (typeof window !== 'undefined' && localStorage.getItem('context0_api_url')) ||
+  import.meta.env.VITE_API_URL ||
+  'https://context0-backend.onrender.com';
+
 if (rawBase && !rawBase.startsWith('http://') && !rawBase.startsWith('https://')) {
   rawBase = `https://${rawBase}`;
 }

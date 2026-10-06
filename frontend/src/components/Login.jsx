@@ -24,7 +24,12 @@ export default function Login() {
       await login(form.username, form.password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Check your credentials.');
+      const msg =
+        err.response?.data?.detail ||
+        (err.message === 'Network Error' || !err.response
+          ? `Cannot reach backend (${err.config?.baseURL || 'API'}). Check if context0-backend is still booting on Render.`
+          : err.message || 'Login failed. Check your credentials.');
+      setError(msg);
     } finally {
       setLoading(false);
     }

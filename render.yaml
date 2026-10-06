@@ -37,10 +37,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: context0-backend
-          property: host
+        value: https://context0-backend.onrender.com
     routes:
       - type: rewrite
         source: /*
