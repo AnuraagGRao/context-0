@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "context0-maintenance",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-12-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "quiz.anuraaggrao.com/*",
+      "zone_name": "anuraaggrao.com"
+    }
+  ]
+}
